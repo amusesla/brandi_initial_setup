@@ -3,8 +3,8 @@ import pymysql
 from flask import Flask
 from flask_cors import CORS
 
-from model import TestDao
-from service import TestService
+from model import HealthCheckDao
+from service import HealthCheckService
 from view import create_endpoints
 
 
@@ -28,11 +28,11 @@ def create_app(test_config=None):
     database = app.config['DB']
 
     # persistence Layer
-    test_dao = TestDao()
+    health_check_dao = HealthCheckDao()
 
     # business Layer
     services = Services
-    services.test_service = TestService(test_dao)
+    services.health_check_service = HealthCheckService(health_check_dao)
 
     # presentation Layer
     create_endpoints(app, services, database)
