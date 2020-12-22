@@ -11,27 +11,44 @@ from connection import get_connection
 # NotSupportedError, SQL 버전에 맞지 않는 기능 사용 및 SQL 루틴에 맞지 않는 명령실행(rollback 을 끝난 트랜젝션에 요구)
 
 class TestUserView(MethodView):
-    """데이터베이스 연결을 체크하기 위한 목적으로 제작된 클래스
+    """
+    데이터베이스 연결을 체크하기 위한 목적으로 제작된 클래스
 
-      Attributes:
-          database: app.config['DB']에 담겨있 정보: 데이터베이스 관련 정보.
-          service: 서비스 클래스 정보.
-      """
+    Attributes:
+        database: app.config['DB']에 담겨있 정보: 데이터베이스 관련 정보
+        service: 서비스 클래스 정보
+
+    Author: 홍길동
+
+    History:
+        2020-20-20(홍길동): 초기 생성
+        2020-20-21(홍길동): 1차 수정
+        2020-20-22(홍길동): 2차 수정
+    """
 
     def __init__(self, service, database):
         self.service = service
         self.database = database
 
     def get(self):
-        """GET 메소드: 해당 유저의 정보를 조회.
-            user_id 에 해당되는 유저를 테이블에서 조회 후 가져온다.
+        """
+        GET 메소드: 해당 유저의 정보를 조회.
+        user_id 에 해당되는 유저를 테이블에서 조회 후 가져온다.
 
-            Args:
+        Args:
 
-            Returns:
-                200, { 해당 유저 정보 } : 조회 성공
-                400, {'errorMessage': 'user_does_not_exist'} : 유저 정보 조회 실패
-            Raises:
+        Author: 홍길동
+
+        Returns:
+            200, { 해당 유저 정보 } : 조회 성공
+            400, {'errorMessage': 'user_does_not_exist'} : 유저 정보 조회 실패
+
+        History:
+            2020-20-20(홍길동): 초기 생성
+            2020-20-21(홍길동): 1차 수정
+            2020-20-22(홍길동): 2차 수정
+
+        Raises:
         """
 
         try:
@@ -47,15 +64,22 @@ class TestUserView(MethodView):
             connection.close()
 
     def post(self):
-        """POST 메소드: 유저생성
-            Args:
+        """
+        POST 메소드: 유저생성
+        Args:
 
-            Returns:
+        Author: 홍길동
 
-                200, { 해당 유저 정보 } : 조회 성공
-                400, {'errorMessage': 'user_does_not_exist'} : 유저 정보 조회 실패
+        Returns:
+            200, { 해당 유저 정보 } : 조회 성공
+            400, {'errorMessage': 'user_does_not_exist'} : 유저 정보 조회 실패
 
-            Raises:
+        History:
+            2020-20-20(홍길동): 초기 생성
+            2020-20-21(홍길동): 1차 수정
+            2020-20-22(홍길동): 2차 수정
+
+        Raises:
         """
         try:
             connection = get_connection(self.database)
@@ -74,14 +98,22 @@ class TestUserView(MethodView):
             connection.close()
 
     def patch(self):
-        """PATCH 메소드: 유저 정보 수정
-            Args:
+        """
+        PATCH 메소드: 유저 정보 수정
+        Args:
 
-            Returns:
-                200, { 해당 유저 정보 } : 조회 성공
-                400, {'errorMessage': 'unable_to_update'} : 유저 정보 수정 실패
+        Author: 홍길동
 
-            Raises:
+        Returns:
+            200, { 해당 유저 정보 } : 조회 성공
+            400, {'errorMessage': 'unable_to_update'} : 유저 정보 수정 실패
+
+        Raises:
+
+        History:
+            2020-20-20(홍길동): 초기 생성
+            2020-20-21(홍길동): 1차 수정
+            2020-20-22(홍길동): 2차 수정
         """
         try:
             connection = get_connection(self.database)
@@ -91,10 +123,10 @@ class TestUserView(MethodView):
         except Exception as e:
             connection.rollback()
             return {'status': 400, 'message': format(e)}
+
         else:
             connection.commit()
             return {'status': 200, 'message': 'success'}
 
         finally:
             connection.close()
-
