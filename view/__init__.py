@@ -1,7 +1,8 @@
-from .health_check_view import HealthCheckView
+from .test_user_view import TestUserView
 
 
 def create_endpoints(app, services, database):
-    test_service = services.health_check_service
+    test_user_service = services.test_user_service
 
-    app.add_url_rule('/test', view_func=HealthCheckView.as_view('test_service', test_service, database))
+# The arguments passed to as_view() are forwarded to the constructor of the class.
+    app.add_url_rule('/test', view_func=TestUserView.as_view('test_user_view', test_user_service, database))
