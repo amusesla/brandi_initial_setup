@@ -14,6 +14,7 @@ class TestUserService:
             2020-20-21(홍길동): 1차 수정
             2020-20-22(홍길동): 2차 수정
     """
+
     def __init__(self, test_user_dao):
         self.test_user_dao = test_user_dao
 
@@ -37,6 +38,7 @@ class TestUserService:
             2020-20-21(홍길동): 1차 수정
             2020-20-22(홍길동): 2차 수정
         """
+
         try:
             user_id = data['user_id']
             return self.test_user_dao.get_dao(connection, user_id)
@@ -102,6 +104,7 @@ class TestUserService:
             2020-20-21(홍길동): 1차 수정
             2020-20-22(홍길동): 2차 수정
         """
+
         try:
             user_id = data['user_id']
             age = data['age']

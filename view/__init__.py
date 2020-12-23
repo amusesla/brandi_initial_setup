@@ -1,3 +1,13 @@
+""" 엔드 포인트의 시작 및 URL 관리
+
+create_endpoints 함수가 정의되어 있는 곳. 함수 안에 사용할 url endpoint 를 정의한다.
+파일 끝에 error_handle()함수를 호출 한다.
+
+기본적인 사용 예시:
+    app.add_url_rule('/test', view_func=TestUserView.as_view('test_user_view', test_user_service, database))
+
+"""
+
 from .test_user_view import TestUserView
 from error_handler import error_handle
 
@@ -13,13 +23,10 @@ def create_endpoints(app, services, database):
 
             Author: 홍길동
 
-            Returns:
-                return {"message": "success", "result": [{"age": "18", "gender": "남자", "id": 12, "name": "김민구12"}]}
+            Returns: None
 
-            Raises:
-                400, {'message': 'key error', 'errorMessage': 'key_error'}                          : 잘못 입력된 키값
-                400, {'message': 'User does not exist error', 'errorMessage': 'user_does_not_exist'}: 유저 정보 조회 실패
-
+            Raises: None
+            
             History:
                 2020-20-20(홍길동): 초기 생성
                 2020-20-21(홍길동): 1차 수정

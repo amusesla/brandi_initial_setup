@@ -1,6 +1,8 @@
 from flask import jsonify, request
 from flask.views import MethodView
 from connection import get_connection
+from custom_exceptions import DatabaseCloseFail
+# 커넥션 종료 에러 혹시 몰라서 만들어 놓음
 
 
 class TestUserView(MethodView):
@@ -35,8 +37,10 @@ class TestUserView(MethodView):
             return {"message": "success", "result": [{"age": "18", "gender": "남자", "id": 12, "name": "김민구12"}]}
 
         Raises:
-            400, {'message': 'key error', 'errorMessage': 'key_error'}                          : 잘못 입력된 키값
-            400, {'message': 'User does not exist error', 'errorMessage': 'user_does_not_exist'}: 유저 정보 조회 실패
+            400, {'message': 'key error', 'errorMessage': 'key_error'}                              : 잘못 입력된 키값
+            400, {'message': 'user does not exist error', 'errorMessage': 'user_does_not_exist'}    : 유저 정보 조회 실패
+            400, {'message': 'unable to close database', 'errorMessage': 'unable_to_close_database'}: 커넥션 종료 실패
+            500, {'message': 'internal server error', 'errorMessage': format(e)})                   : 서버 에러
 
         History:
             2020-20-20(홍길동): 초기 생성
@@ -54,8 +58,11 @@ class TestUserView(MethodView):
             raise e
 
         finally:
-            if connection:
-                connection.close()
+            try:
+                if connection:
+                    connection.close()
+            except Exception:
+                raise Exception
 
     def post(self):
         """POST 메소드: 유저생성
@@ -65,18 +72,21 @@ class TestUserView(MethodView):
         Author: 홍길동
 
         Returns:
-            200, {'message': 'success'}                                               : 유저 생성 성공
+            200, {'message': 'success'}                                                             : 유저 생성 성공
 
         Raises:
-            400, {'message': 'key error', 'errorMessage': 'key_error'}                : 잘못 입력된 키값
-            400, {'message': 'user create error', 'errorMessage': 'user_create_error'}: 유저 생성 실패
-            403, {'message': 'user already exist', errorMessage': 'already_exist'}    : 중복 유저 생성 실패
+            400, {'message': 'key error', 'errorMessage': 'key_error'}                              : 잘못 입력된 키값
+            400, {'message': 'user create error', 'errorMessage': 'user_create_error'}              : 유저 생성 실패
+            403, {'message': 'user already exist', errorMessage': 'already_exist'}                  : 중복 유저 생성 실패
+            400, {'message': 'unable to close database', 'errorMessage': 'unable_to_close_database'}: 커넥션 종료 실패
+            500, {'message': 'internal server error', 'errorMessage': format(e)})                   : 서버 에러
 
         History:
             2020-20-20(홍길동): 초기 생성
             2020-20-21(홍길동): 1차 수정
             2020-20-22(홍길동): 2차 수정
         """
+
         try:
             connection = get_connection(self.database)
             data = request.json
@@ -91,8 +101,11 @@ class TestUserView(MethodView):
             return {'message': 'success'}
 
         finally:
-            if connection:
-                connection.close()
+            try:
+                if connection:
+                    connection.close()
+            except Exception:
+                raise Exception
 
     def patch(self):
         """PATCH 메소드: 유저 정보 수정
@@ -102,17 +115,20 @@ class TestUserView(MethodView):
         Author: 홍길동
 
         Returns:
-            200, {'message': 'success'}                                             : 유저 생성 성공
+            200, {'message': 'success'}                                                             : 유저 생성 성공
 
         Raises:
-            400, {'message': 'key error', 'errorMessage': 'key_error'}              : 잘못 입력된 키값
-            400, {'message': 'unable to update', 'errorMessage': 'unable_to_update'}: 유저 정보 수정 실패
+            400, {'message': 'key error', 'errorMessage': 'key_error'}                              : 잘못 입력된 키값
+            400, {'message': 'unable to update', 'errorMessage': 'unable_to_update'}                : 유저 정보 수정 실패
+            400, {'message': 'unable to close database', 'errorMessage': 'unable_to_close_database'}: 커넥션 종료 실패
+            500, {'message': 'internal server error', 'errorMessage': format(e)})                   : 서버 에러
 
         History:
             2020-20-20(홍길동): 초기 생성
             2020-20-21(홍길동): 1차 수정
             2020-20-22(홍길동): 2차 수정
         """
+
         try:
             connection = get_connection(self.database)
             data = request.json
@@ -127,5 +143,8 @@ class TestUserView(MethodView):
             return {'message': 'success'}
 
         finally:
-            if connection:
-                connection.close()
+            try:
+                if connection:
+                    connection.close()
+            except Exception:
+                raise Exception

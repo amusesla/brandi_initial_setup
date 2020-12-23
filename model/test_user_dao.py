@@ -13,11 +13,11 @@ class TestUserDao:
             2020-20-20(홍길동): 초기 생성
             2020-20-21(홍길동): 1차 수정
             2020-20-22(홍길동): 2차 수정
-        """
+    """
 
     def get_dao(self, connection, user_id):
         user_id = user_id
-        """GET 메소드: 유저 정보 조회
+        """유저 정보 조회
 
         Args:
             connection: 데이터베이스 연결 객체
@@ -52,7 +52,7 @@ class TestUserDao:
 
     def get_username(self, connection, name):
         username = name
-        """GET 메소드: 유저 중복 검사
+        """유저 이름 중복 검사
 
         Args:
             connection: 데이터베이스 연결 객체
@@ -88,7 +88,7 @@ class TestUserDao:
         context['name'] = name
         context['gender'] = gender
         context['age'] = age
-        """POST 메소드: 유저 정보 생성
+        """유저 정보 생성
 
         Args:
             connection: 데이터베이스 연결 객체
@@ -137,7 +137,7 @@ class TestUserDao:
         context['user_id'] = user_id
         context['age'] = age
 
-        """PATCH 메소드: 유저 정보 수정
+        """유저 정보 수정
 
         Args:
             connection: 데이터베이스 연결 객체

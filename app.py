@@ -12,7 +12,7 @@ class Services:
 
 
 def create_app(test_config=None):
-    app=  Flask(__name__)
+    app = Flask(__name__)
     app.debug = True
 
     # By default, submission of cookies across domains is disabled due to the security implications.
@@ -24,6 +24,7 @@ def create_app(test_config=None):
         app.config.update(test_config)
 
     database = app.config['DB']
+
     # persistence Layer
     test_user_dao = TestUserDao()
 
