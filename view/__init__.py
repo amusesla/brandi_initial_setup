@@ -4,6 +4,27 @@ from error_handler import error_handle
 
 def create_endpoints(app, services, database):
     test_user_service = services.test_user_service
+    """ 앤드 포인트 시작
+
+            Args: 
+                app     : Flask 앱
+                services: Services 클래스:Service 클래스들을 담고 있는 클래스이다.
+                database: 데이터베이스 
+
+            Author: 홍길동
+
+            Returns:
+                return {"message": "success", "result": [{"age": "18", "gender": "남자", "id": 12, "name": "김민구12"}]}
+
+            Raises:
+                400, {'message': 'key error', 'errorMessage': 'key_error'}                          : 잘못 입력된 키값
+                400, {'message': 'User does not exist error', 'errorMessage': 'user_does_not_exist'}: 유저 정보 조회 실패
+
+            History:
+                2020-20-20(홍길동): 초기 생성
+                2020-20-21(홍길동): 1차 수정
+                2020-20-22(홍길동): 2차 수정
+            """
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Service Section(write your code under your name)

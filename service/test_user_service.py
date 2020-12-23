@@ -2,13 +2,24 @@ from custom_exceptions import UserAlreadyExist
 
 
 class TestUserService:
+    """ Business Layer
+
+        Attributes:
+            test_user_dao: TestUserDao 클래스
+
+        Author: 홍길동
+
+        History:
+            2020-20-20(홍길동): 초기 생성
+            2020-20-21(홍길동): 1차 수정
+            2020-20-22(홍길동): 2차 수정
+    """
     def __init__(self, test_user_dao):
         self.test_user_dao = test_user_dao
 
     def get_test_user_service(self, connection, data):
+        """해당 아이디를 가진 유저를 검색 함수
 
-        """
-        해당 아이디를 가진 유저를 검색 함수
         Args:
             connection: 데이터베이스 연결 객체
             data      : front 에서 넘겨받은 json 객체
@@ -16,16 +27,15 @@ class TestUserService:
         Author: 홍길동
 
         Returns:
-            200, { 해당 유저 정보 } : 조회 성공
+            return [{'id': 12, 'name': '김기용', 'gender': '남자', 'age': '18'}]
+
+        Raises:
+            400, {'message': 'key error', 'errorMessage': 'key_error'}: 잘못 입력된 키값
 
         History:
             2020-20-20(홍길동): 초기 생성
             2020-20-21(홍길동): 1차 수정
             2020-20-22(홍길동): 2차 수정
-
-        Raises:
-            400, {'message': 'key error', 'errorMessage': format(e)}
-
         """
         try:
             user_id = data['user_id']
@@ -35,8 +45,7 @@ class TestUserService:
             raise KeyError('key_error')
 
     def post_test_user_service(self, connection, data):
-        """
-        POST 메소드: 유저생성
+        """POST 메소드: 유저생성
 
         Args:
             connection: 데이터베이스 연결 객체
@@ -45,14 +54,16 @@ class TestUserService:
         Author: 홍길동
 
         Returns:
-            200, { 해당 유저 정보 }: 조회 성공
+            return (): 빈값 반환
+
+        Raises:
+            400, {'message': 'key error', 'errorMessage': 'key_error'}             : 잘못 입력된 키값
+            400, {'message': 'user already exist', 'errorMessage': 'already_exist'}: 중복 유저 존재
 
         History:
             2020-20-20(홍길동): 초기 생성
             2020-20-21(홍길동): 1차 수정
             2020-20-22(홍길동): 2차 수정
-
-        Raises:
         """
 
         try:
@@ -64,7 +75,7 @@ class TestUserService:
             username = self.test_user_dao.get_username(connection, name)
 
             if username:
-                raise UserAlreadyExist
+                raise UserAlreadyExist('already_exist')
 
             return self.test_user_dao.post_dao(connection, name, gender, age)
 
@@ -72,8 +83,7 @@ class TestUserService:
             raise KeyError('key_error')
 
     def patch_test_user_service(self, connection, data):
-        """
-        PATCH 메소드: 유저 정보 수정
+        """PATCH 메소드: 유저 정보 수정
 
         Args:
             connection: 데이터베이스 연결 객체
@@ -82,18 +92,20 @@ class TestUserService:
         Author: 홍길동
 
         Returns:
-            200, { 해당 유저 정보 } : 조회 성공
+            return (): 빈값 반환
+
+        Raises:
+            400, {'message': 'key error', 'errorMessage': 'key_error'}: 잘못 입력된 키값
 
         History:
             2020-20-20(홍길동): 초기 생성
             2020-20-21(홍길동): 1차 수정
             2020-20-22(홍길동): 2차 수정
-
-        Raises:
         """
         try:
             user_id = data['user_id']
             age = data['age']
             return self.test_user_dao.patch_dao(connection, user_id, age)
+
         except KeyError:
             raise KeyError('key_error')

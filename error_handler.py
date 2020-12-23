@@ -24,22 +24,22 @@ def error_handle(app):
     # customized exception
     @app.errorhandler(UserAlreadyExist)
     def handle_user_already_exist_error(e):
-        return jsonify({'message': 'User already exist error', 'errorMessage': format(e)}), 403
+        return jsonify({'message': 'user already exist error', 'errorMessage': format(e)}), 403
 
     # customized exception
     @app.errorhandler(UserUpdateDenied)
     def handle_user_update_error(e):
-        return jsonify({'message': 'User update error', 'errorMessage': format(e)}), 400
+        return jsonify({'message': 'user update error', 'errorMessage': format(e)}), 400
 
     # customized exception
     @app.errorhandler(UserCreateDenied)
     def handle_user_create_error(e):
-        return jsonify({'message': 'User create error', 'errorMessage': format(e)}), 400
+        return jsonify({'message': 'user create error', 'errorMessage': format(e)}), 400
 
     # customized exception
     @app.errorhandler(UserNotExist)
     def handle_user_not_exist_error(e):
-        return jsonify({'message': 'User does not exist error', 'errorMessage': format(e)}), 400
+        return jsonify({'message': 'user does not exist error', 'errorMessage': format(e)}), 400
 
 
 

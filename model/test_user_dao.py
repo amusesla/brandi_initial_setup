@@ -3,22 +3,30 @@ from custom_exceptions import UserUpdateDenied, UserCreateDenied, UserNotExist
 
 
 class TestUserDao:
+    """ Persistence Layer
+
+        Attributes: None
+
+        Author: 홍길동
+
+        History:
+            2020-20-20(홍길동): 초기 생성
+            2020-20-21(홍길동): 1차 수정
+            2020-20-22(홍길동): 2차 수정
+        """
 
     def get_dao(self, connection, user_id):
         user_id = user_id
-
-        """
-        GET 메소드: 유저 정보 조회
+        """GET 메소드: 유저 정보 조회
 
         Args:
             connection: 데이터베이스 연결 객체
-            user_id   : 서비스에서 넘겨 받은 수정할 user 의 id
+            user_id   : 서비스 레이어에서 넘겨 받은 수정할 user_id
 
         Author: 홍길동
 
         Returns:
-            200, { 해당 유저 정보 } : 조회 성공
-            400, {'errorMessage': 'user_does_not_exist'} : 유저 정보 조회 실패
+            return [{'id': 12, 'name': '김기용', 'gender': '남자', 'age': '18'}]
 
         History:
             2020-20-20(홍길동): 초기 생성
@@ -26,7 +34,9 @@ class TestUserDao:
             2020-20-22(홍길동): 2차 수정
             
         Raises:
+            400, {'message': 'user dose not exist', 'errorMessage': 'user_does_not_exist'} : 유저 정보 조회 실패
         """
+
         sql = """
             SELECT * 
             FROM users
@@ -42,25 +52,26 @@ class TestUserDao:
 
     def get_username(self, connection, name):
         username = name
-
-        """
-        GET 메소드: 유저 중복 검사
+        """GET 메소드: 유저 중복 검사
 
         Args:
             connection: 데이터베이스 연결 객체
-            user_id   : 서비스에서 넘겨 받은 수정할 user 의 id
+            name      : 서비스에서 넘겨 받은 수정할 user 유저
 
         Author: 홍길동
 
         Returns:
+            return ()                                                        : 해당 유저 없음
+            return [{'id': 12, 'name': '김기용', 'gender': '남자', 'age': '18'}]: 해당 유저 존재
 
+        Raises: None
+        
         History:
             2020-20-20(홍길동): 초기 생성
             2020-20-21(홍길동): 1차 수정
             2020-20-22(홍길동): 2차 수정
-
-        Raises:
         """
+
         sql = """
             SELECT * 
             FROM users
@@ -77,29 +88,26 @@ class TestUserDao:
         context['name'] = name
         context['gender'] = gender
         context['age'] = age
-
-        """
-        POST 메소드: 유저 정보 생성
+        """POST 메소드: 유저 정보 생성
 
         Args:
             connection: 데이터베이스 연결 객체
-            name      : 생성할 user의 name
-            gender    : 생성할 user의 gender
-            age       : 생성할 user의 age
+            name      : 생성할 user 의 name
+            gender    : 생성할 user 의 gender
+            age       : 생성할 user 의 age
 
         Author: 홍길동
 
         Returns:
-            200, {'message': 'success'} : 생성 성공
-            400, {'errorMessage': 'unable_to_create'} : 유저 생성 실패
+            return (): 생성 성공
 
+        Raises:
+            400, {'message': 'unable to create', 'errorMessage': 'unable_to_create'} : 유저 생성 실패
 
         History:
             2020-20-20(홍길동): 초기 생성
             2020-20-21(홍길동): 1차 수정
             2020-20-22(홍길동): 2차 수정
-
-        Raises:
         """
         sql = """
         INSERT INTO users 
@@ -128,8 +136,8 @@ class TestUserDao:
         context = dict()
         context['user_id'] = user_id
         context['age'] = age
-        """
-        PATCH 메소드: 유저 정보 수정
+
+        """PATCH 메소드: 유저 정보 수정
 
         Args:
             connection: 데이터베이스 연결 객체
@@ -138,17 +146,15 @@ class TestUserDao:
 
         Author: 홍길동
 
-        Returns:
-            200, {'message': 'success'} : 수정 성공
-            400, {'errorMessage': 'unable_to_update'} : 유저 수정 실패
+        Returns: None
 
-
+        Raises:
+            400, {'message': 'unable to update', 'errorMessage': 'unable_to_update'} : 유저 수정 실패
+  
         History:
             2020-20-20(홍길동): 초기 생성
             2020-20-21(홍길동): 1차 수정
             2020-20-22(홍길동): 2차 수정
-
-        Raises:
         """
 
         sql = """
@@ -161,6 +167,5 @@ class TestUserDao:
             affected_row = cursor.execute(sql, (
                 context
             ))
-            print(affected_row)
             if affected_row == 0:
                 raise UserUpdateDenied('unable_to_update')
