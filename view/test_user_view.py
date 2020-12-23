@@ -8,7 +8,7 @@ class TestUserView(MethodView):
 
     Attributes:
         database: app.config['DB']에 담겨있 정보: 데이터베이스 관련 정보
-        service: 서비스 클래스 정보
+        service : 서비스 클래스 정보
 
     Author: 홍길동
 
@@ -23,7 +23,8 @@ class TestUserView(MethodView):
         self.database = database
 
     def get(self):
-        """        GET 메소드: 해당 유저의 정보를 조회.
+        """GET 메소드: 해당 유저의 정보를 조회.
+
         user_id 에 해당되는 유저를 테이블에서 조회 후 가져온다.
 
         Args:
@@ -32,7 +33,8 @@ class TestUserView(MethodView):
 
         Returns:
             200, { 해당 유저 정보 } : 조회 성공
-            400, {'errorMessage': 'user_does_not_exist'} : 유저 정보 조회 실패
+            403, {'errorMessage': 'user_does_not_exist'} : 유저 정보 조회 실패
+            402, {'errorMessage': 'key_error'} : 잘못 입력된 키값
 
         History:
             2020-20-20(홍길동): 초기 생성
@@ -46,14 +48,18 @@ class TestUserView(MethodView):
             connection = get_connection(self.database)
             data = request.json
             user = self.service.get_test_user_service(connection, data)
-            return jsonify(user), 200
+            return jsonify({'message': 'success', 'result': user})
+
+        except Exception as e:
+            raise e
 
         finally:
-            connection.close()
+            if connection:
+                connection.close()
 
     def post(self):
-        """
-        POST 메소드: 유저생성
+        """POST 메소드: 유저생성
+
         Args:
 
         Author: 홍길동
@@ -76,18 +82,15 @@ class TestUserView(MethodView):
 
         except Exception as e:
             connection.rollback()
-            return {'status': 400, 'errorMessage': format(e)}
-
-# 클래스를 통해서 response 를 만들자
-# 핸들러에서 메세지를 다뤄주면서 message 모양을 만들자
-        #make_response
+            raise e
 
         else:
             connection.commit()
-            return {'status': 200, 'message': 'success'}
+            return {'message': 'success'}
 
         finally:
-            connection.close()
+            if connection:
+                connection.close()
 
     def patch(self):
         """
@@ -114,12 +117,12 @@ class TestUserView(MethodView):
 
         except Exception as e:
             connection.rollback()
-            return {'status': 400, 'message': format(e)}
+            raise e
 
         else:
             connection.commit()
-            return {'status': 200, 'message': 'success'}
+            return {'message': 'success'}
 
         finally:
-            connection.close()
-
+            if connection:
+                connection.close()

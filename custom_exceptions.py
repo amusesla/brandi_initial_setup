@@ -1,5 +1,15 @@
 # custom exception goes here
 class UserAlreadyExist(Exception):
+    pass
 
-    def __init__(self, status_code=400):
-        self.status_code = status_code
+
+class UserUpdateDenied(Exception):
+    pass
+
+
+class UserCreateDenied(Exception):
+    pass
+
+
+class UserNotExist(Exception):
+    pass

@@ -1,5 +1,5 @@
 from flask import jsonify
-from custom_exceptions import UserAlreadyExist
+from custom_exceptions import UserAlreadyExist, UserCreateDenied, UserUpdateDenied, UserNotExist
 
 
 # InterfaceError, 데이터 조작 할 때 컬럼 개수와 value 개수가 불일치.
@@ -9,7 +9,6 @@ from custom_exceptions import UserAlreadyExist
 # IntegrityError, 유효하지 않은 cursor, foreignkey 검사 실패로 인한 트랜젝션 실패.
 # ProgrammingError, SQL 문법에러, 매개변수 수가 불일치.
 # NotSupportedError, SQL 버전에 맞지 않는 기능 사용 및 SQL 루틴에 맞지 않는 명령실행(rollback 을 끝난 트랜젝션에 요구).
-
 
 # start error handling
 def error_handle(app):
@@ -24,9 +23,25 @@ def error_handle(app):
 
     # customized exception
     @app.errorhandler(UserAlreadyExist)
-    def handle_key_error(e):
-        print('11111111111111111111111111')
-        return jsonify({'message': 'already_exist', 'errorMessage': format(e)}), 400
+    def handle_user_already_exist_error(e):
+        return jsonify({'message': 'User already exist error', 'errorMessage': format(e)}), 403
+
+    # customized exception
+    @app.errorhandler(UserUpdateDenied)
+    def handle_user_update_error(e):
+        return jsonify({'message': 'User update error', 'errorMessage': format(e)}), 400
+
+    # customized exception
+    @app.errorhandler(UserCreateDenied)
+    def handle_user_create_error(e):
+        return jsonify({'message': 'User create error', 'errorMessage': format(e)}), 400
+
+    # customized exception
+    @app.errorhandler(UserNotExist)
+    def handle_user_not_exist_error(e):
+        return jsonify({'message': 'User does not exist error', 'errorMessage': format(e)}), 400
+
+
 
 
 

@@ -24,13 +24,15 @@ class TestUserService:
             2020-20-22(홍길동): 2차 수정
 
         Raises:
+            400, {'message': 'key error', 'errorMessage': format(e)}
+
         """
         try:
             user_id = data['user_id']
             return self.test_user_dao.get_dao(connection, user_id)
 
         except KeyError:
-            raise KeyError('This is KeyError')
+            raise KeyError('key_error')
 
     def post_test_user_service(self, connection, data):
         """
@@ -43,7 +45,7 @@ class TestUserService:
         Author: 홍길동
 
         Returns:
-            200, { 해당 유저 정보 } : 조회 성공
+            200, { 해당 유저 정보 }: 조회 성공
 
         History:
             2020-20-20(홍길동): 초기 생성
@@ -60,8 +62,9 @@ class TestUserService:
 
             # 중복검사
             username = self.test_user_dao.get_username(connection, name)
+
             if username:
-                raise UserAlreadyExist('테스트테스')
+                raise UserAlreadyExist
 
             return self.test_user_dao.post_dao(connection, name, gender, age)
 

@@ -1,4 +1,5 @@
 import pymysql
+from custom_exceptions import UserUpdateDenied, UserCreateDenied, UserNotExist
 
 
 class TestUserDao:
@@ -11,7 +12,7 @@ class TestUserDao:
 
         Args:
             connection: 데이터베이스 연결 객체
-            user_id      : 서비스에서 넘겨 받은 수정할 user 의 id
+            user_id   : 서비스에서 넘겨 받은 수정할 user 의 id
 
         Author: 홍길동
 
@@ -19,15 +20,14 @@ class TestUserDao:
             200, { 해당 유저 정보 } : 조회 성공
             400, {'errorMessage': 'user_does_not_exist'} : 유저 정보 조회 실패
 
-
         History:
             2020-20-20(홍길동): 초기 생성
             2020-20-21(홍길동): 1차 수정
             2020-20-22(홍길동): 2차 수정
-
+            
         Raises:
         """
-        sql ="""
+        sql = """
             SELECT * 
             FROM users
             WHERE id=%s;
@@ -37,7 +37,7 @@ class TestUserDao:
             cursor.execute(sql, user_id)
             result = cursor.fetchall()
             if not result:
-                raise Exception('user_does_not_exist')
+                raise UserNotExist('user_does_not_exist')
             return result
 
     def get_username(self, connection, name):
@@ -48,7 +48,7 @@ class TestUserDao:
 
         Args:
             connection: 데이터베이스 연결 객체
-            user_id      : 서비스에서 넘겨 받은 수정할 user 의 id
+            user_id   : 서비스에서 넘겨 받은 수정할 user 의 id
 
         Author: 홍길동
 
@@ -121,7 +121,7 @@ class TestUserDao:
             ))
             result = cursor.lastrowid
             if not result:
-                raise Exception('unable_to_create')
+                raise UserCreateDenied('unable_to_create')
             return result
 
     def patch_dao(self, connection, user_id, age):
@@ -153,13 +153,14 @@ class TestUserDao:
 
         sql = """
         UPDATE users 
-        SET age =%s 
-        WHERE id=%s;
+        SET age =%(age)s 
+        WHERE id=%(user_id)s;
         """
 
         with connection.cursor() as cursor:
             affected_row = cursor.execute(sql, (
                 context
             ))
+            print(affected_row)
             if affected_row == 0:
-                raise Exception('unable_to_update')
+                raise UserUpdateDenied('unable_to_update')
