@@ -24,7 +24,6 @@ def create_app(test_config=None):
         app.config.update(test_config)
 
     database = app.config['DB']
-
     # persistence Layer
     test_user_dao = TestUserDao()
 

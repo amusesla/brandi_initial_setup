@@ -1,3 +1,6 @@
+from custom_exceptions import UserAlreadyExist
+
+
 class TestUserService:
     def __init__(self, test_user_dao):
         self.test_user_dao = test_user_dao
@@ -22,9 +25,12 @@ class TestUserService:
 
         Raises:
         """
+        try:
+            user_id = data['user_id']
+            return self.test_user_dao.get_dao(connection, user_id)
 
-        user_id = data['user_id']
-        return self.test_user_dao.get_dao(connection, user_id)
+        except KeyError:
+            raise KeyError('This is KeyError')
 
     def post_test_user_service(self, connection, data):
         """
@@ -46,10 +52,21 @@ class TestUserService:
 
         Raises:
         """
-        name = data['name']
-        gender = data['gender']
-        age = data['age']
-        return self.test_user_dao.post_dao(connection, name, gender, age)
+
+        try:
+            name = data['name']
+            gender = data['gender']
+            age = data['age']
+
+            # 중복검사
+            username = self.test_user_dao.get_username(connection, name)
+            if username:
+                raise UserAlreadyExist('테스트테스')
+
+            return self.test_user_dao.post_dao(connection, name, gender, age)
+
+        except KeyError:
+            raise KeyError('key_error')
 
     def patch_test_user_service(self, connection, data):
         """
@@ -71,6 +88,9 @@ class TestUserService:
 
         Raises:
         """
-        user_id = data['user_id']
-        age = data['age']
-        return self.test_user_dao.patch_dao(connection, user_id, age)
+        try:
+            user_id = data['user_id']
+            age = data['age']
+            return self.test_user_dao.patch_dao(connection, user_id, age)
+        except KeyError:
+            raise KeyError('key_error')
