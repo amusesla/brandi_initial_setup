@@ -47,7 +47,7 @@ class TestUserDao:
             cursor.execute(sql, user_id)
             result = cursor.fetchall()
             if not result:
-                raise UserNotExist('user_does_not_exist')
+                raise UserNotExist('already_exist')
             return result
 
     def get_username(self, connection, name):
@@ -129,7 +129,7 @@ class TestUserDao:
             ))
             result = cursor.lastrowid
             if not result:
-                raise UserCreateDenied('unable_to_create')
+                raise UserCreateDenied
             return result
 
     def patch_dao(self, connection, user_id, age):
@@ -168,4 +168,4 @@ class TestUserDao:
                 context
             ))
             if affected_row == 0:
-                raise UserUpdateDenied('unable_to_update')
+                raise UserUpdateDenied

@@ -1,8 +1,12 @@
-from flask import jsonify, request
+from flask import jsonify
 from flask.views import MethodView
 from connection import get_connection
-from custom_exceptions import DatabaseCloseFail
-# 커넥션 종료 에러 혹시 몰라서 만들어 놓음
+from custom_exceptions import DatabaseCloseFail, TestUserGetRule
+from flask_request_validator import (
+    Param,
+    JSON,
+    validate_params
+)
 
 
 class TestUserView(MethodView):
@@ -24,7 +28,14 @@ class TestUserView(MethodView):
         self.service = service
         self.database = database
 
-    def get(self):
+    @validate_params(
+        Param('user_id', JSON, int, rules=[TestUserGetRule("^[0-9]+")])
+    )
+    def get(self, *args):
+
+        data = {
+            'user_id': args[0]
+        }
         """GET 메소드: 해당 유저의 정보를 조회.
 
         user_id 에 해당되는 유저를 테이블에서 조회 후 가져온다.
@@ -50,21 +61,29 @@ class TestUserView(MethodView):
 
         try:
             connection = get_connection(self.database)
-            data = request.json
             user = self.service.get_test_user_service(connection, data)
             return jsonify({'message': 'success', 'result': user})
 
         except Exception as e:
             raise e
-
         finally:
             try:
                 if connection:
                     connection.close()
-            except Exception:
-                raise Exception
+            except DatabaseCloseFail:
+                raise DatabaseCloseFail
 
-    def post(self):
+    @validate_params(
+        Param('name', JSON, str),
+        Param('gender', JSON, str),
+        Param('age', JSON, int)
+    )
+    def post(self, *args):
+        data = {
+            'name': args[0],
+            'gender': args[1],
+            'age': args[2]
+        }
         """POST 메소드: 유저생성
 
         Args: None
@@ -88,26 +107,33 @@ class TestUserView(MethodView):
         """
 
         try:
+
             connection = get_connection(self.database)
-            data = request.json
             self.service.post_test_user_service(connection, data)
+            connection.commit()
+            return {'message': 'success'}
 
         except Exception as e:
             connection.rollback()
             raise e
 
-        else:
-            connection.commit()
-            return {'message': 'success'}
-
         finally:
             try:
                 if connection:
                     connection.close()
-            except Exception:
-                raise Exception
+            except DatabaseCloseFail:
+                raise DatabaseCloseFail
 
-    def patch(self):
+    @validate_params(
+        Param('user_id', JSON, int),
+        Param('age', JSON, int)
+    )
+    def patch(self, *args):
+        data = {
+            'user_id': args[0],
+            'age': args[1]
+        }
+
         """PATCH 메소드: 유저 정보 수정
 
         Args: None
@@ -131,20 +157,17 @@ class TestUserView(MethodView):
 
         try:
             connection = get_connection(self.database)
-            data = request.json
             self.service.patch_test_user_service(connection, data)
+            connection.commit()
+            return {'message': 'success'}
 
         except Exception as e:
             connection.rollback()
             raise e
 
-        else:
-            connection.commit()
-            return {'message': 'success'}
-
         finally:
             try:
                 if connection:
                     connection.close()
-            except Exception:
-                raise Exception
+            except DatabaseCloseFail:
+                raise DatabaseCloseFail

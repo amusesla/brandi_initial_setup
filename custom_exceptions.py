@@ -8,23 +8,72 @@
     pass
 
 """
+from flask_request_validator import AbstractRule
+import re
 
 
-class UserAlreadyExist(Exception):
-    pass
+class CustomUserError(Exception):
+    def __init__(self, status_code, message, error_message):
+
+        self.status_code = status_code
+
+        self.message = message
+        self.error_message = error_message
 
 
-class UserUpdateDenied(Exception):
-    pass
+class TestUserGetRule(AbstractRule):
+    def __init__(self, pattern):
+        self.pattern = re.compile(pattern)
+
+    def validate(self, value):
+        errors = []
+        result = self.pattern.match(str(value))
+        if not result:
+            errors.append('Value "%s" does not match pattern %s' %
+                          (value, 'int'))
+
+#"errorMessage": "Invalid request data. {\"user_id\": [\"Error of conversion value \\\" \\\" to type <class 'int'>\"]}",
+
+            return value, errors
 
 
-class UserCreateDenied(Exception):
-    pass
+class UserAlreadyExist(CustomUserError):
+    def __init__(self, error_message):
+        self.status_code = 400
+        self.message = 'user already exist'
+        self.error_message = error_message
+        super().__init__(self.status_code, self.message, self.error_message)
 
 
-class UserNotExist(Exception):
-    pass
+class UserUpdateDenied(CustomUserError):
+    def __init__(self, error_message):
+        self.status_code = 400
+        self.message = 'user update denied'
+        self.error_message = error_message
+        super().__init__(self.status_code, self.message, self.error_message)
 
 
-class DatabaseCloseFail(Exception):
-    pass
+class UserCreateDenied(CustomUserError):
+    def __init__(self, error_message):
+        self.status_code = 400
+        self.message = 'user create denied'
+        self.error_message = error_message
+        super().__init__(self.status_code, self.message, self.error_message)
+
+
+class UserNotExist(CustomUserError):
+    def __init__(self, error_message):
+        self.status_code = 400
+        self.message = 'user not exist'
+        self.error_message = error_message
+
+        super().__init__(self.status_code, self.message, self.error_message)
+
+
+class DatabaseCloseFail(CustomUserError):
+    def __init__(self, error_message):
+        self.status_code = 400
+        self.message = 'database connection fail'
+        self.error_message = error_message
+        super().__init__(self.status_code, self.message, self.error_message)
+

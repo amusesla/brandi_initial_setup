@@ -77,7 +77,7 @@ class TestUserService:
             username = self.test_user_dao.get_username(connection, name)
 
             if username:
-                raise UserAlreadyExist('already_exist')
+                raise UserAlreadyExist
 
             return self.test_user_dao.post_dao(connection, name, gender, age)
 

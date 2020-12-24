@@ -20,9 +20,11 @@
 """
 
 from flask import jsonify
-from custom_exceptions import UserAlreadyExist, UserCreateDenied, UserUpdateDenied, UserNotExist, DatabaseCloseFail
-
-
+from custom_exceptions import (UserAlreadyExist,
+                               UserCreateDenied,
+                               UserUpdateDenied,
+                               UserNotExist,
+                               DatabaseCloseFail)
 
 
 # start error handling
@@ -36,27 +38,31 @@ def error_handle(app):
     def handle_key_error(e):
         return jsonify({'message': 'key error', 'errorMessage': format(e)}), 400
 
+    @app.errorhandler(NotImplementedError)
+    def handle_key_error(e):
+        return jsonify({'message': format(e), 'errorMessage': format(e)}), 400
+
     # customized exception
     @app.errorhandler(UserAlreadyExist)
     def handle_user_already_exist_error(e):
-        return jsonify({'message': 'user already exist error', 'errorMessage': format(e)}), 403
+        return jsonify({"message": e.message, "errorMessage": e.error_message})
 
     # customized exception
     @app.errorhandler(UserUpdateDenied)
     def handle_user_update_error(e):
-        return jsonify({'message': 'user update error', 'errorMessage': format(e)}), 400
+        return jsonify({"message": e.message, "errorMessage": e.error_message})
 
     # customized exception
     @app.errorhandler(UserCreateDenied)
     def handle_user_create_error(e):
-        return jsonify({'message': 'user create error', 'errorMessage': format(e)}), 400
+        return jsonify({"message": e.message, "errorMessage": e.error_message})
 
     # customized exception
     @app.errorhandler(UserNotExist)
     def handle_user_not_exist_error(e):
-        return jsonify({'message': 'user does not exist error', 'errorMessage': format(e)}), 400
+        return jsonify({"message": e.message, "errorMessage": e.error_message})
 
     # customized exception
     @app.errorhandler(DatabaseCloseFail)
     def handle_database_close_fail_error(e):
-        return jsonify({'message': 'unable to close database', 'errorMessage': format(e)}), 400
+        return jsonify({"message": e.message, "errorMessage": e.error_message})
