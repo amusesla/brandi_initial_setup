@@ -14,27 +14,24 @@ import re
 
 class CustomUserError(Exception):
     def __init__(self, status_code, message, error_message):
-
         self.status_code = status_code
-
         self.message = message
         self.error_message = error_message
 
 
-class TestUserGetRule(AbstractRule):
-    def __init__(self, pattern):
-        self.pattern = re.compile(pattern)
+# class TestUserGetRule(AbstractRule):
+#     def __init__(self, pattern):
+#         self.pattern = re.compile(pattern)
+#
+#     def validate(self, value):
+#         pass
 
-    def validate(self, value):
-        errors = []
-        result = self.pattern.match(str(value))
-        if not result:
-            errors.append('Value "%s" does not match pattern %s' %
-                          (value, 'int'))
-
-#"errorMessage": "Invalid request data. {\"user_id\": [\"Error of conversion value \\\" \\\" to type <class 'int'>\"]}",
-
-            return value, errors
+class InvalidUserId(CustomUserError):
+    def __init__(self, error_message):
+        self.status_code = 400
+        self.message = 'user_id must be integer'
+        self.error_message = error_message
+        super().__init__(self.status_code, self.message, self.error_message)
 
 
 class UserAlreadyExist(CustomUserError):

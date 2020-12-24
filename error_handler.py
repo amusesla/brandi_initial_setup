@@ -24,7 +24,9 @@ from custom_exceptions import (UserAlreadyExist,
                                UserCreateDenied,
                                UserUpdateDenied,
                                UserNotExist,
-                               DatabaseCloseFail)
+                               DatabaseCloseFail,
+                               InvalidUserId)
+from flask_request_validator.exceptions import InvalidRequest
 
 
 # start error handling
@@ -41,6 +43,16 @@ def error_handle(app):
     @app.errorhandler(NotImplementedError)
     def handle_key_error(e):
         return jsonify({'message': format(e), 'errorMessage': format(e)}), 400
+
+    # customized exception
+    @app.errorhandler(InvalidRequest)
+    def handle_user_already_exist_error(e):
+        return jsonify({'message': 'invalid parameter', 'errorMessage:': format(e)})
+
+    # customized exception
+    @app.errorhandler(InvalidUserId)
+    def handle_user_already_exist_error(e):
+        return jsonify({"message": e.message, "errorMessage": e.error_message})
 
     # customized exception
     @app.errorhandler(UserAlreadyExist)

@@ -44,7 +44,7 @@ class TestUserService:
             return self.test_user_dao.get_dao(connection, user_id)
 
         except KeyError:
-            raise KeyError('key_error')
+            raise KeyError
 
     def post_test_user_service(self, connection, data):
         """POST 메소드: 유저생성
@@ -77,7 +77,7 @@ class TestUserService:
             username = self.test_user_dao.get_username(connection, name)
 
             if username:
-                raise UserAlreadyExist
+                raise UserAlreadyExist('already_exist')
 
             return self.test_user_dao.post_dao(connection, name, gender, age)
 

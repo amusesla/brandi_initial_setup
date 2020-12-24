@@ -1,7 +1,7 @@
 from flask import jsonify
 from flask.views import MethodView
 from connection import get_connection
-from custom_exceptions import DatabaseCloseFail, TestUserGetRule
+from custom_exceptions import DatabaseCloseFail
 from flask_request_validator import (
     Param,
     JSON,
@@ -29,7 +29,7 @@ class TestUserView(MethodView):
         self.database = database
 
     @validate_params(
-        Param('user_id', JSON, int, rules=[TestUserGetRule("^[0-9]+")])
+        Param('user_id', JSON, int, rules=[])
     )
     def get(self, *args):
 
