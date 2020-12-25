@@ -1,7 +1,7 @@
 from flask import jsonify, request
 from flask.views import MethodView
 from connection import get_connection
-from custom_exceptions import DatabaseCloseFail
+from custom_exceptions import DatabaseCloseFail, UserNameRule, UserGenderRule, UserAgeRule
 from flask_request_validator import (
     Param,
     JSON,
@@ -75,9 +75,9 @@ class TestUserView(MethodView):
                 raise DatabaseCloseFail
 
     @validate_params(
-        Param('name', JSON, str),
-        Param('gender', JSON, str),
-        Param('age', JSON, int)
+        Param('name', JSON, str, rules=[UserNameRule()]),
+        Param('gender', JSON, str, rules=[UserGenderRule()]),
+        Param('age', JSON, str, rules=[UserAgeRule()])
     )
     def post(self, *args):
         data = {
@@ -126,8 +126,8 @@ class TestUserView(MethodView):
                 raise DatabaseCloseFail
 
     @validate_params(
-        Param('user_id', JSON, int),
-        Param('age', JSON, int)
+        Param('user_id', JSON, str),
+        Param('age', JSON, str, rules=[UserAgeRule()])
     )
     def patch(self, *args):
         data = {

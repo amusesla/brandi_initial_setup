@@ -23,12 +23,42 @@ class CustomUserError(Exception):
         self.error_message = error_message
 
 
-# class TestUserGetRule(AbstractRule):
-#     def __init__(self, pattern):
-#         self.pattern = re.compile(pattern)
-#
-#     def validate(self, value):
-#         pass
+class UserNameRule(AbstractRule):
+    def validate(self, value):
+        pattern = '^[A-Za-z]+$'
+        regex = re.compile(pattern)
+        result = regex.match(value)
+        errors = []
+        if result:
+            return value, errors
+        else:
+            errors.append('accept only alphabetic characters')
+            return value, errors
+
+
+class UserAgeRule(AbstractRule):
+    def validate(self, value):
+        pattern = '^[0-9]+$'
+        regex = re.compile(pattern)
+        result = regex.match(value)
+        errors = []
+        if result:
+            return value, errors
+        else:
+            errors.append('accept only numbers')
+            return value, errors
+
+
+class UserGenderRule(AbstractRule):
+    def validate(self, value):
+        gender_set = ['male', 'female']
+        errors = []
+        if value in gender_set:
+            return value, errors
+        else:
+            errors.append('accept only male and female value')
+            return value, errors
+
 
 class InvalidUserId(CustomUserError):
     def __init__(self, error_message):
