@@ -5,7 +5,11 @@
 
 기본적인 사용 예시:
   class IamException(Exception):
-    pass
+        def __init__(self, error_message):
+        self.status_code = 400
+        self.message = 'your message goes here'
+        self.error_message = error_message
+        super().__init__(self.status_code, self.message, self.error_message)
 
 """
 from flask_request_validator import AbstractRule

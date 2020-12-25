@@ -44,10 +44,14 @@ def error_handle(app):
     def handle_key_error(e):
         return jsonify({'message': format(e), 'errorMessage': format(e)}), 400
 
-    # customized exception
+    # pram customized exception
     @app.errorhandler(InvalidRequest)
     def handle_user_already_exist_error(e):
-        return jsonify({'message': 'invalid parameter', 'errorMessage:': format(e)})
+        return jsonify({'message': 'invalid parameter', 'errorMessage:': str(e)
+                       .replace('{', '')
+                       .replace('}', '')
+                       .replace('\"', '')
+                       .replace('\\', '')}), 400
 
     # customized exception
     @app.errorhandler(InvalidUserId)

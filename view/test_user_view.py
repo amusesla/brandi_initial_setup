@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, request
 from flask.views import MethodView
 from connection import get_connection
 from custom_exceptions import DatabaseCloseFail
@@ -32,6 +32,7 @@ class TestUserView(MethodView):
         Param('user_id', JSON, int, rules=[])
     )
     def get(self, *args):
+
 
         data = {
             'user_id': args[0]
