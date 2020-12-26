@@ -12,6 +12,7 @@
         super().__init__(self.status_code, self.message, self.error_message)
 
 """
+
 from flask_request_validator import AbstractRule
 import re
 
@@ -23,17 +24,26 @@ class CustomUserError(Exception):
         self.error_message = error_message
 
 
+class UserIdRule(AbstractRule):
+    def validate(self, value):
+        pattern = '^[0-9]+$'
+        regex = re.compile(pattern)
+        result = regex.match(value)
+        errors = []
+        if not result:
+            errors.append('accept only number')
+        return value, errors
+
+
 class UserNameRule(AbstractRule):
     def validate(self, value):
         pattern = '^[A-Za-z]+$'
         regex = re.compile(pattern)
         result = regex.match(value)
         errors = []
-        if result:
-            return value, errors
-        else:
+        if not result:
             errors.append('accept only alphabetic characters')
-            return value, errors
+        return value, errors
 
 
 class UserAgeRule(AbstractRule):
@@ -42,22 +52,18 @@ class UserAgeRule(AbstractRule):
         regex = re.compile(pattern)
         result = regex.match(value)
         errors = []
-        if result:
-            return value, errors
-        else:
+        if not result:
             errors.append('accept only numbers')
-            return value, errors
+        return value, errors
 
 
 class UserGenderRule(AbstractRule):
     def validate(self, value):
         gender_set = ['male', 'female']
         errors = []
-        if value in gender_set:
-            return value, errors
-        else:
+        if value not in gender_set:
             errors.append('accept only male and female value')
-            return value, errors
+        return value, errors
 
 
 class InvalidUserId(CustomUserError):
@@ -107,4 +113,3 @@ class DatabaseCloseFail(CustomUserError):
         self.message = 'database connection fail'
         self.error_message = error_message
         super().__init__(self.status_code, self.message, self.error_message)
-

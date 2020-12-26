@@ -44,7 +44,7 @@ class TestUserService:
             return self.test_user_dao.get_dao(connection, user_id)
 
         except KeyError:
-            raise KeyError
+            raise KeyError('key_error')
 
     def post_test_user_service(self, connection, data):
         """POST 메소드: 유저생성

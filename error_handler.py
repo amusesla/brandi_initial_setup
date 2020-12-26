@@ -46,7 +46,7 @@ def error_handle(app):
 
     # pram customized exception
     @app.errorhandler(InvalidRequest)
-    def handle_user_already_exist_error(e):
+    def handle_user_custom_rule(e):
         return jsonify({'message': 'invalid parameter', 'errorMessage:': str(e)
                        .replace('{', '')
                        .replace('}', '')
