@@ -1,11 +1,11 @@
-from custom_exceptions import UserAlreadyExist
+from utils.custom_exceptions import UserAlreadyExist
 
 
-class TestUserService:
+class SampleUserService:
     """ Business Layer
 
         Attributes:
-            test_user_dao: TestUserDao 클래스
+            sample_user_dao: TestUserDao 클래스
 
         Author: 홍길동
 
@@ -15,10 +15,10 @@ class TestUserService:
             2020-20-22(홍길동): 2차 수정
     """
 
-    def __init__(self, test_user_dao):
-        self.test_user_dao = test_user_dao
+    def __init__(self, sample_user_dao):
+        self.sample_user_dao = sample_user_dao
 
-    def get_test_user_service(self, connection, data):
+    def get_sample_user_service(self, connection, data):
         """해당 아이디를 가진 유저를 검색 함수
 
         Args:
@@ -41,12 +41,12 @@ class TestUserService:
 
         try:
             user_id = data['user_id']
-            return self.test_user_dao.get_dao(connection, user_id)
+            return self.sample_user_dao.get_dao(connection, user_id)
 
         except KeyError:
             raise KeyError('key_error')
 
-    def post_test_user_service(self, connection, data):
+    def post_sample_user_service(self, connection, data):
         """POST 메소드: 유저생성
 
         Args:
@@ -74,17 +74,17 @@ class TestUserService:
             age = data['age']
 
             # 중복검사
-            username = self.test_user_dao.get_username(connection, name)
+            username = self.sample_user_dao.get_username(connection, name)
 
             if username:
                 raise UserAlreadyExist('already_exist')
 
-            return self.test_user_dao.post_dao(connection, name, gender, age)
+            return self.sample_user_dao.post_dao(connection, name, gender, age)
 
         except KeyError:
             raise KeyError('key_error')
 
-    def patch_test_user_service(self, connection, data):
+    def patch_sample_user_service(self, connection, data):
         """PATCH 메소드: 유저 정보 수정
 
         Args:
@@ -108,7 +108,7 @@ class TestUserService:
         try:
             user_id = data['user_id']
             age = data['age']
-            return self.test_user_dao.patch_dao(connection, user_id, age)
+            return self.sample_user_dao.patch_dao(connection, user_id, age)
 
         except KeyError:
             raise KeyError('key_error')

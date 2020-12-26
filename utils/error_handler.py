@@ -20,13 +20,13 @@
 """
 
 from flask import jsonify
-from custom_exceptions import (UserAlreadyExist,
-                               UserCreateDenied,
-                               UserUpdateDenied,
-                               UserNotExist,
-                               DatabaseCloseFail,
-                               InvalidUserId)
 from flask_request_validator.exceptions import InvalidRequest
+from utils.custom_exceptions import (UserAlreadyExist,
+                                     UserCreateDenied,
+                                     UserUpdateDenied,
+                                     UserNotExist,
+                                     DatabaseCloseFail,
+                                     InvalidUserId)
 
 
 # start error handling

@@ -1,8 +1,8 @@
 import pymysql
-from custom_exceptions import UserUpdateDenied, UserCreateDenied, UserNotExist
+from utils.custom_exceptions import UserUpdateDenied, UserCreateDenied, UserNotExist
 
 
-class TestUserDao:
+class SampleUserDao:
     """ Persistence Layer
 
         Attributes: None

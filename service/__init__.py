@@ -4,4 +4,4 @@
 
 """
 
-from .test_user_service import TestUserService
+from .sample_user_service import SampleUserService

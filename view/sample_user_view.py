@@ -1,7 +1,8 @@
-from flask import jsonify, request
+from flask import jsonify
 from flask.views import MethodView
-from connection import get_connection
-from custom_exceptions import DatabaseCloseFail, UserNameRule, UserGenderRule, UserAgeRule, UserIdRule
+from utils.connection import get_connection
+from utils.custom_exceptions import DatabaseCloseFail
+from utils.rules import NumberRule, GenderRule, AlphabeticRule
 from flask_request_validator import (
     Param,
     JSON,
@@ -9,7 +10,7 @@ from flask_request_validator import (
 )
 
 
-class TestUserView(MethodView):
+class SampleUserView(MethodView):
     """ Presentation Layer
 
     Attributes:
@@ -29,7 +30,7 @@ class TestUserView(MethodView):
         self.database = database
 
     @validate_params(
-        Param('user_id', JSON, str, rules=[UserIdRule()])
+        Param('user_id', JSON, str, rules=[NumberRule()])
     )
     def get(self, *args):
 
@@ -61,7 +62,7 @@ class TestUserView(MethodView):
 
         try:
             connection = get_connection(self.database)
-            user = self.service.get_test_user_service(connection, data)
+            user = self.service.get_sample_user_service(connection, data)
             return jsonify({'message': 'success', 'result': user})
 
         except Exception as e:
@@ -71,12 +72,12 @@ class TestUserView(MethodView):
                 if connection:
                     connection.close()
             except Exception:
-                raise DatabaseCloseFail
+                raise DatabaseCloseFail('database close fail')
 
     @validate_params(
-        Param('name', JSON, str, rules=[UserNameRule()]),
-        Param('gender', JSON, str, rules=[UserGenderRule()]),
-        Param('age', JSON, str, rules=[UserAgeRule()])
+        Param('name', JSON, str, rules=[AlphabeticRule()]),
+        Param('gender', JSON, str, rules=[GenderRule()]),
+        Param('age', JSON, str, rules=[NumberRule()])
     )
     def post(self, *args):
         data = {
@@ -109,7 +110,7 @@ class TestUserView(MethodView):
         try:
 
             connection = get_connection(self.database)
-            self.service.post_test_user_service(connection, data)
+            self.service.post_sample_user_service(connection, data)
             connection.commit()
             return {'message': 'success'}
 
@@ -122,11 +123,11 @@ class TestUserView(MethodView):
                 if connection:
                     connection.close()
             except Exception:
-                raise DatabaseCloseFail
+                raise DatabaseCloseFail('database close fail')
 
     @validate_params(
         Param('user_id', JSON, str),
-        Param('age', JSON, str, rules=[UserAgeRule()])
+        Param('age', JSON, str, rules=[NumberRule()])
     )
     def patch(self, *args):
         data = {
@@ -157,7 +158,7 @@ class TestUserView(MethodView):
 
         try:
             connection = get_connection(self.database)
-            self.service.patch_test_user_service(connection, data)
+            self.service.patch_sample_user_service(connection, data)
             connection.commit()
             return {'message': 'success'}
 
@@ -170,4 +171,4 @@ class TestUserView(MethodView):
                 if connection:
                     connection.close()
             except Exception:
-                raise DatabaseCloseFail
+                raise DatabaseCloseFail('database close fail')

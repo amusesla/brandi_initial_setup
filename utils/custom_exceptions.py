@@ -13,57 +13,12 @@
 
 """
 
-from flask_request_validator import AbstractRule
-import re
-
 
 class CustomUserError(Exception):
     def __init__(self, status_code, message, error_message):
         self.status_code = status_code
         self.message = message
         self.error_message = error_message
-
-
-class UserIdRule(AbstractRule):
-    def validate(self, value):
-        pattern = '^[0-9]+$'
-        regex = re.compile(pattern)
-        result = regex.match(value)
-        errors = []
-        if not result:
-            errors.append('accept only number')
-        return value, errors
-
-
-class UserNameRule(AbstractRule):
-    def validate(self, value):
-        pattern = '^[A-Za-z]+$'
-        regex = re.compile(pattern)
-        result = regex.match(value)
-        errors = []
-        if not result:
-            errors.append('accept only alphabetic characters')
-        return value, errors
-
-
-class UserAgeRule(AbstractRule):
-    def validate(self, value):
-        pattern = '^[0-9]+$'
-        regex = re.compile(pattern)
-        result = regex.match(value)
-        errors = []
-        if not result:
-            errors.append('accept only numbers')
-        return value, errors
-
-
-class UserGenderRule(AbstractRule):
-    def validate(self, value):
-        gender_set = ['male', 'female']
-        errors = []
-        if value not in gender_set:
-            errors.append('accept only male and female value')
-        return value, errors
 
 
 class InvalidUserId(CustomUserError):

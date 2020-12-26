@@ -4,4 +4,4 @@
 
 """
 
-from .test_user_dao import TestUserDao
+from .sample_user_dao import SampleUserDao
