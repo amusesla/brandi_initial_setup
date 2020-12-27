@@ -23,12 +23,12 @@ class SampleUserService:
 
         Args:
             connection: 데이터베이스 연결 객체
-            data      : front 에서 넘겨받은 json 객체
+            data      : View 에서 넘겨받은 dict 객체
 
         Author: 홍길동
 
         Returns:
-            return [{'id': 12, 'name': '김기용', 'gender': '남자', 'age': '18'}]
+            return [{'id': 12, 'name': '홍길동', 'gender': '남자', 'age': '18'}]
 
         Raises:
             400, {'message': 'key error', 'errorMessage': 'key_error'}: 잘못 입력된 키값
@@ -51,7 +51,7 @@ class SampleUserService:
 
         Args:
             connection: 데이터베이스 연결 객체
-            data      : front 에서 넘겨받은 json 객체
+            data      : View 에서 넘겨받은 dict 객체
 
         Author: 홍길동
 
@@ -69,17 +69,13 @@ class SampleUserService:
         """
 
         try:
-            name = data['name']
-            gender = data['gender']
-            age = data['age']
-
             # 중복검사
-            username = self.sample_user_dao.get_username(connection, name)
+            username = self.sample_user_dao.get_username(connection, data)
 
             if username:
                 raise UserAlreadyExist('already_exist')
 
-            return self.sample_user_dao.post_dao(connection, name, gender, age)
+            return self.sample_user_dao.post_dao(connection, data)
 
         except KeyError:
             raise KeyError('key_error')
@@ -112,3 +108,4 @@ class SampleUserService:
 
         except KeyError:
             raise KeyError('key_error')
+    

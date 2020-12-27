@@ -50,19 +50,18 @@ class SampleUserDao:
                 raise UserNotExist('user_does_not_exist')
             return result
 
-    def get_username(self, connection, name):
-        username = name
+    def get_username(self, connection, data):
         """유저 이름 중복 검사
 
         Args:
             connection: 데이터베이스 연결 객체
-            name      : 서비스에서 넘겨 받은 수정할 user 유저
+            data      : 서비스에서 넘겨 받은 dict 객체
 
         Author: 홍길동
 
         Returns:
             return ()                                                        : 해당 유저 없음
-            return [{'id': 12, 'name': '김기용', 'gender': '남자', 'age': '18'}]: 해당 유저 존재
+            return [{'id': 12, 'name': '홍길동', 'gender': '남자', 'age': '18'}]: 해당 유저 존재
 
         Raises: None
         
@@ -79,22 +78,16 @@ class SampleUserDao:
         """
 
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
-            cursor.execute(sql, username)
+            cursor.execute(sql, data['name'])
             result = cursor.fetchall()
             return result
 
-    def post_dao(self, connection, name, gender, age):
-        context = dict()
-        context['name'] = name
-        context['gender'] = gender
-        context['age'] = age
+    def post_dao(self, connection, data):
         """유저 정보 생성
 
         Args:
             connection: 데이터베이스 연결 객체
-            name      : 생성할 user 의 name
-            gender    : 생성할 user 의 gender
-            age       : 생성할 user 의 age
+            data      : service 에서 넘겨 받은 dict 객체
 
         Author: 홍길동
 
@@ -124,9 +117,7 @@ class SampleUserDao:
         """
 
         with connection.cursor() as cursor:
-            cursor.execute(sql, (
-                context
-            ))
+            cursor.execute(sql, data)
             result = cursor.lastrowid
             if not result:
                 raise UserCreateDenied('unable_to_create')

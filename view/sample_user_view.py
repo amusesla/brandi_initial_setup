@@ -33,7 +33,6 @@ class SampleUserView(MethodView):
         Param('user_id', JSON, str, rules=[NumberRule()])
     )
     def get(self, *args):
-
         data = {
             'user_id': args[0]
         }
@@ -41,12 +40,12 @@ class SampleUserView(MethodView):
 
         user_id 에 해당되는 유저를 테이블에서 조회 후 가져온다.
 
-        Args: None
+        Args: args = ('user_id, )
 
         Author: 홍길동
 
         Returns:
-            return {"message": "success", "result": [{"age": "18", "gender": "남자", "id": 12, "name": "김민구12"}]}
+            return {"message": "success", "result": [{"age": "18", "gender": "남자", "id": 12, "name": "홍길동"}]}
 
         Raises:
             400, {'message': 'key error', 'errorMessage': 'key_error'}                              : 잘못 입력된 키값
@@ -87,7 +86,7 @@ class SampleUserView(MethodView):
         }
         """POST 메소드: 유저생성
 
-        Args: None
+        Args: args = ('name', 'gender', 'age')
 
         Author: 홍길동
 
@@ -108,7 +107,6 @@ class SampleUserView(MethodView):
         """
 
         try:
-
             connection = get_connection(self.database)
             self.service.post_sample_user_service(connection, data)
             connection.commit()
@@ -134,10 +132,9 @@ class SampleUserView(MethodView):
             'user_id': args[0],
             'age': args[1]
         }
-
         """PATCH 메소드: 유저 정보 수정
 
-        Args: None
+        Args: args = ('user_id', 'age')
 
         Author: 홍길동
 
