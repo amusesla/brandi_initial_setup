@@ -102,9 +102,7 @@ class SampleUserService:
         """
 
         try:
-            user_id = data['user_id']
-            age = data['age']
-            return self.sample_user_dao.patch_dao(connection, user_id, age)
+            return self.sample_user_dao.patch_dao(connection, data)
 
         except KeyError:
             raise KeyError('key_error')

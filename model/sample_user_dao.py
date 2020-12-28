@@ -123,10 +123,7 @@ class SampleUserDao:
                 raise UserCreateDenied('unable_to_create')
             return result
 
-    def patch_dao(self, connection, user_id, age):
-        context = dict()
-        context['user_id'] = user_id
-        context['age'] = age
+    def patch_dao(self, connection, data):
 
         """유저 정보 수정
 
@@ -155,8 +152,6 @@ class SampleUserDao:
         """
 
         with connection.cursor() as cursor:
-            affected_row = cursor.execute(sql, (
-                context
-            ))
+            affected_row = cursor.execute(sql, data)
             if affected_row == 0:
                 raise UserUpdateDenied('unable_to_update')

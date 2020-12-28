@@ -13,12 +13,14 @@
 
 """
 
-
+# don't touch
 class CustomUserError(Exception):
     def __init__(self, status_code, message, error_message):
         self.status_code = status_code
         self.message = message
         self.error_message = error_message
+
+#-----------------------------------------------------------------------------------------------------------------------
 
 
 class InvalidUserId(CustomUserError):
