@@ -108,4 +108,3 @@ class SampleUserService:
 
         except KeyError:
             raise KeyError('key_error')
-    

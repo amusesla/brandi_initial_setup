@@ -21,12 +21,7 @@
 
 from flask import jsonify
 from flask_request_validator.exceptions import InvalidRequest
-from utils.custom_exceptions import (UserAlreadyExist,
-                                     UserCreateDenied,
-                                     UserUpdateDenied,
-                                     UserNotExist,
-                                     DatabaseCloseFail,
-                                     InvalidUserId)
+from utils.custom_exceptions import (CustomUserError)
 
 
 # start error handling
@@ -54,31 +49,7 @@ def error_handle(app):
                        .replace('\\', '')}), 400
 
     # customized exception
-    @app.errorhandler(InvalidUserId)
-    def handle_user_already_exist_error(e):
+    @app.errorhandler(CustomUserError)
+    def handle_error(e):
         return jsonify({"message": e.message, "errorMessage": e.error_message})
 
-    # customized exception
-    @app.errorhandler(UserAlreadyExist)
-    def handle_user_already_exist_error(e):
-        return jsonify({"message": e.message, "errorMessage": e.error_message})
-
-    # customized exception
-    @app.errorhandler(UserUpdateDenied)
-    def handle_user_update_error(e):
-        return jsonify({"message": e.message, "errorMessage": e.error_message})
-
-    # customized exception
-    @app.errorhandler(UserCreateDenied)
-    def handle_user_create_error(e):
-        return jsonify({"message": e.message, "errorMessage": e.error_message})
-
-    # customized exception
-    @app.errorhandler(UserNotExist)
-    def handle_user_not_exist_error(e):
-        return jsonify({"message": e.message, "errorMessage": e.error_message})
-
-    # customized exception
-    @app.errorhandler(DatabaseCloseFail)
-    def handle_database_close_fail_error(e):
-        return jsonify({"message": e.message, "errorMessage": e.error_message})
